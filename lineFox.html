@@ -7,6 +7,7 @@
     <!-- Favicon (логотип вкладки) -->
     <link rel="icon" type="image/png" href="BCO.51882994-eff0-43e2-81cd-7e4c13bef99d.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -593,9 +594,10 @@
     <div id="messages"></div>
 
     <div class="input-area">
-        <input type="file" id="fileInput" style="display:none;" accept="image/*,video/*,audio/*">
+        <!-- Убрали accept, чтобы можно было выбирать любые файлы, включая архивы -->
+        <input type="file" id="fileInput" style="display:none;" multiple>
         <!-- Кнопка вложения (скрепка) увеличенная -->
-        <button class="input-btn" onclick="document.getElementById('fileInput').click()" title="Прикрепить файл (до 10 МБ)">
+        <button class="input-btn" onclick="document.getElementById('fileInput').click()" title="Прикрепить файлы (до 10 МБ, несколько файлов упакуются в ZIP)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
             </svg>
@@ -673,8 +675,8 @@
 
 <script>
     // ================== НАСТРОЙКИ ==================
-    var GITHUB_TOKEN = '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';   // замените на свой
-    var GIST_ID = '0e648fb61d9aa38e383b0c756c1d09e0';      // замените на свой
+    var GITHUB_TOKEN = '';   // замените на свой
+    var GIST_ID = '';      // замените на свой
     const FILE_NAME = 'txt';
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 МБ после шифрования
 
@@ -810,60 +812,83 @@
         await postEncryptedMessage(encrypted);
     }
 
-    // ================== ОБРАБОТКА ФАЙЛОВ ==================
+    // ================== ОБРАБОТКА ФАЙЛОВ (в том числе множественных) ==================
     document.getElementById('fileInput').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        await processAndSendFile(file);
-        e.target.value = '';
-    });
-
-    async function processAndSendFile(file) {
-        if (file.size > 10 * 1024 * 1024) {
-            alert('Файл слишком большой (макс. 10 МБ)');
-            return;
-        }
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
 
         const statusDiv = document.getElementById('compressStatus');
         statusDiv.style.display = 'block';
 
         try {
-            let processedFile = file;
-
-            if (file.type.startsWith('image/')) {
-                processedFile = await compressImageToWebP(file);
-            } else if (file.type.startsWith('video/')) {
-                processedFile = await compressVideo(file);
+            if (files.length === 1) {
+                // Одиночный файл – обрабатываем как обычно
+                await processAndSendFile(files[0]);
+            } else {
+                // Несколько файлов – создаём ZIP
+                statusDiv.innerText = '⏳ Создание архива...';
+                const zipFile = await createZipFromFiles(files);
+                statusDiv.innerText = '⏳ Отправка архива...';
+                await processAndSendFile(zipFile);
             }
-
-            const base64Data = await readFileAsBase64(processedFile);
-
-            const fileObject = {
-                type: 'file',
-                user: currentUser,
-                name: processedFile.name,
-                mime: processedFile.type || 'application/octet-stream',
-                size: processedFile.size,
-                data: base64Data,
-                time: Date.now(),
-                avatar: currentUserAvatar || null,
-                reactions: []
-            };
-
-            const jsonStr = JSON.stringify(fileObject);
-            const encrypted = CryptoJS.AES.encrypt(jsonStr, currentSeed).toString();
-
-            if (encrypted.length > MAX_FILE_SIZE) {
-                throw new Error('Зашифрованный файл превышает лимит 5 МБ');
-            }
-
-            await postEncryptedMessage(encrypted);
         } catch (err) {
-            console.error('Ошибка обработки файла:', err);
+            console.error('Ошибка при отправке файлов:', err);
             alert('Ошибка: ' + err.message);
         } finally {
             statusDiv.style.display = 'none';
+            statusDiv.innerText = '⏳ Обработка медиа...'; // восстанавливаем текст
+            e.target.value = '';
         }
+    });
+
+    // Создание ZIP-архива из списка файлов
+    async function createZipFromFiles(files) {
+        const zip = new JSZip();
+        for (let file of files) {
+            // Добавляем каждый файл в корень архива
+            zip.file(file.name, file);
+        }
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        const zipFile = new File([zipBlob], 'archive.zip', { type: 'application/zip' });
+        return zipFile;
+    }
+
+    async function processAndSendFile(file) {
+        if (file.size > 10 * 1024 * 1024) {
+            throw new Error('Файл слишком большой (макс. 10 МБ)');
+        }
+
+        let processedFile = file;
+
+        // Сжимаем изображения и видео (только для одиночных файлов, архивы не сжимаем)
+        if (file.type.startsWith('image/')) {
+            processedFile = await compressImageToWebP(file);
+        } else if (file.type.startsWith('video/')) {
+            processedFile = await compressVideo(file);
+        }
+
+        const base64Data = await readFileAsBase64(processedFile);
+
+        const fileObject = {
+            type: 'file',
+            user: currentUser,
+            name: processedFile.name,
+            mime: processedFile.type || 'application/octet-stream',
+            size: processedFile.size,
+            data: base64Data,
+            time: Date.now(),
+            avatar: currentUserAvatar || null,
+            reactions: []
+        };
+
+        const jsonStr = JSON.stringify(fileObject);
+        const encrypted = CryptoJS.AES.encrypt(jsonStr, currentSeed).toString();
+
+        if (encrypted.length > MAX_FILE_SIZE) {
+            throw new Error('Зашифрованный файл превышает лимит 5 МБ');
+        }
+
+        await postEncryptedMessage(encrypted);
     }
 
     function readFileAsBase64(file) {
