@@ -8,45 +8,89 @@
     <link rel="icon" type="image/png" href="BCO.51882994-eff0-43e2-81cd-7e4c13bef99d.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- css -->
     <style>
+        :root {
+    --glass-bg: rgba(5, 15, 30, 0.7);
+    --glass-border: rgba(70, 130, 200, 0.3);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 20, 0.6);
+    --accent-blue: #2b6eb0;
+    --accent-light-blue: #4a9eff;
+    --bg-gradient: radial-gradient(circle at 30% 40%, #0e1a2b, #030711);
+    --text-primary: #ecf5ff;
+    --text-secondary: #aac3e0;
+    --input-bg-glass: rgba(20, 30, 50, 0.6);
+    --my-message-glass: linear-gradient(135deg, rgba(50, 150, 255, 0.8), rgba(30, 100, 220, 0.8));
+    --other-message-glass: linear-gradient(135deg, rgba(20, 30, 50, 0.9), rgba(10, 18, 35, 0.9));
+    --header-glass: rgba(3, 10, 25, 0.85);
+    --emoji-panel-glass: rgba(8, 16, 32, 0.95);
+    --scroll-thumb: #3a7bcb;
+    --scroll-track: rgba(58, 123, 203, 0.2);
+    --icon-color: #b0d0ff;
+}
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        /* ---------- Тёмно-синяя тема с голубыми своими сообщениями ---------- */
         :root {
-            --bg-color: #1a1a2e;
-            --container-bg: #16213e;
-            --accent-color: #6a4c9c;
-            --accent-light: #8a6cc9;
-            --text-color: #e0e0e0;
-            --border-color: #2a3a5e;
-            --header-bg: #0f3460;
-            --my-message-bg: #5d4e8c;
-            --other-message-bg: #2d4059;
-            --date-divider-bg: #1e2b3a;
-            --input-bg: #2b3138;
-            --icon-color: #b8b8ff;
-            --emoji-panel-bg: #1e2a3a;
-            --reaction-bg: rgba(255,255,255,0.1);
-            --scroll-thumb: rgba(138, 108, 201, 0.6);
-            --scroll-track: rgba(106, 76, 156, 0.2);
+            --glass-bg: rgba(5, 15, 30, 0.7);
+            --glass-border: rgba(70, 130, 200, 0.3);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 20, 0.6);
+            --accent-blue: #2b6eb0;
+            --accent-light-blue: #4a9eff;
+            --bg-gradient: radial-gradient(circle at 30% 40%, #0e1a2b, #030711);
+            --text-primary: #ecf5ff;
+            --text-secondary: #aac3e0;
+            --input-bg-glass: rgba(20, 30, 50, 0.6);
+            --my-message-glass: linear-gradient(135deg, rgba(50, 150, 255, 0.8), rgba(30, 100, 220, 0.8));
+            --other-message-glass: linear-gradient(135deg, rgba(20, 30, 50, 0.9), rgba(10, 18, 35, 0.9));
+            --header-glass: rgba(3, 10, 25, 0.85);
+            --emoji-panel-glass: rgba(8, 16, 32, 0.95);
+            --scroll-thumb: #3a7bcb;
+            --scroll-track: rgba(58, 123, 203, 0.2);
+            --icon-color: #b0d0ff;
+        }
+
+        /* ---------- Неоновая тема (сине-фиолетовое стекло) ---------- */
+        .theme-neon {
+            --glass-bg: rgba(20, 10, 40, 0.65);
+            --glass-border: rgba(100, 150, 255, 0.5);
+            --glass-shadow: 0 8px 32px rgba(80, 0, 200, 0.4);
+            --accent-blue: #7a5af5;
+            --accent-light-blue: #a07dff;
+            --bg-gradient: radial-gradient(circle at 70% 20%, #1b103b, #0a051e);
+            --text-primary: #f0eaff;
+            --text-secondary: #c7b5ff;
+            --input-bg-glass: rgba(30, 20, 60, 0.6);
+            --my-message-glass: linear-gradient(135deg, rgba(100, 70, 200, 0.8), rgba(60, 30, 150, 0.8));
+            --other-message-glass: linear-gradient(135deg, rgba(35, 20, 70, 0.9), rgba(20, 8, 45, 0.9));
+            --header-glass: rgba(15, 5, 35, 0.8);
+            --emoji-panel-glass: rgba(25, 12, 50, 0.95);
+            --scroll-thumb: #8a6cff;
+            --scroll-track: rgba(138, 108, 255, 0.3);
+            --icon-color: #b5a6ff;
         }
 
         /* Красивая полоса прокрутки */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         ::-webkit-scrollbar-track {
             background: var(--scroll-track);
+            backdrop-filter: blur(4px);
+            border-radius: 8px;
         }
         ::-webkit-scrollbar-thumb {
             background: var(--scroll-thumb);
             border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-light);
+            background: var(--accent-light-blue);
         }
         * {
             scrollbar-width: thin;
@@ -54,13 +98,14 @@
         }
 
         body {
-            background: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
             margin: 0;
             display: flex;
             justify-content: center;
             height: 100vh;
+            backdrop-filter: blur(2px);
         }
 
         #login-screen {
@@ -75,53 +120,63 @@
         }
 
         #login-screen h2 {
-            color: var(--accent-light);
+            color: var(--text-primary);
             margin-bottom: 30px;
             font-weight: 300;
             letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(70, 130, 200, 0.4);
+            backdrop-filter: blur(5px);
         }
 
         input {
             width: 100%;
             padding: 15px;
             margin: 10px 0;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
+            background: var(--input-bg-glass);
+            border: 1px solid var(--glass-border);
             color: white;
-            border-radius: 10px;
+            border-radius: 40px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glass-shadow);
         }
 
         input:focus {
-            border-color: var(--accent-color);
+            border-color: var(--accent-light-blue);
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.3);
         }
 
         button {
             width: 100%;
             padding: 15px;
-            background: var(--accent-color);
+            background: var(--accent-blue);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 40px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: opacity 0.2s, background 0.2s;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
         }
 
         button:hover {
-            background: var(--accent-light);
+            background: var(--accent-light-blue);
+            box-shadow: 0 12px 28px rgba(43, 110, 176, 0.5);
         }
 
         button:active {
-            opacity: 0.7;
+            transform: scale(0.97);
         }
 
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
         #chat-screen {
@@ -129,11 +184,11 @@
             flex-direction: column;
             height: 100vh;
             width: 100%;
-            background: var(--container-bg);
+            background: transparent;
             position: relative;
+            backdrop-filter: blur(3px);
         }
 
-        /* Широкие экраны - убираем боковые отступы и ограничения */
         @media (min-width: 600px) {
             #chat-screen {
                 max-width: none;
@@ -143,17 +198,19 @@
                 box-shadow: none;
             }
             .msg-wrapper {
-                max-width: 95%; /* увеличиваем ширину сообщений */
+                max-width: 95%;
             }
         }
 
         .header {
-            padding: 10px 15px;
-            background: var(--header-bg);
+            padding: 12px 20px;
+            background: var(--header-glass);
+            backdrop-filter: blur(15px);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid var(--glass-border);
             z-index: 20;
         }
 
@@ -164,19 +221,22 @@
         }
 
         .logo-placeholder {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             background: rgba(255,255,255,0.1);
-            border-radius: 8px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
         }
         .logo-placeholder img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            filter: drop-shadow(0 0 5px var(--accent-blue));
         }
 
         .user-info {
@@ -184,24 +244,31 @@
             align-items: center;
             gap: 8px;
             background: rgba(255,255,255,0.1);
-            padding: 4px 10px 4px 6px;
-            border-radius: 30px;
+            padding: 4px 14px 4px 8px;
+            border-radius: 40px;
             cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.2s;
+        }
+        .user-info:hover {
+            background: rgba(255,255,255,0.2);
         }
 
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             object-fit: cover;
-            background: var(--accent-color);
+            background: linear-gradient(145deg, #2b6eb0, #1a4a7a);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
             font-size: 16px;
-            border: 2px solid var(--accent-light);
+            border: 2px solid rgba(255,255,255,0.4);
+            box-shadow: 0 2px 10px var(--accent-blue);
         }
 
         .user-avatar svg {
@@ -212,12 +279,13 @@
         }
 
         #display-name {
-            max-width: 100px;
+            max-width: 120px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-size: 14px;
-            color: var(--text-color);
+            font-size: 15px;
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .action-buttons {
@@ -226,71 +294,74 @@
         }
 
         .icon-btn {
-            background: transparent;
-            border: none;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
             color: var(--icon-color);
-            padding: 6px;
-            width: 38px;
-            height: 38px;
+            padding: 8px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(10px);
         }
 
         .icon-btn svg {
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             stroke: currentColor;
             fill: none;
         }
 
         .icon-btn:hover {
-            background: rgba(255,255,255,0.15);
-        }
-
-        .icon-btn:active {
             background: rgba(255,255,255,0.25);
+            box-shadow: 0 0 15px var(--accent-blue);
         }
 
         #messages {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            background: var(--bg-color);
+            gap: 12px;
+            background: transparent;
         }
 
         .date-divider {
             text-align: center;
-            margin: 10px 0;
+            margin: 15px 0 10px;
             position: relative;
         }
         .date-divider span {
-            background: var(--date-divider-bg);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #ccc;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 13px;
+            color: var(--text-secondary);
             display: inline-block;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
         .msg-wrapper {
             display: flex;
-            gap: 8px;
-            max-width: 85%; /* по умолчанию, но на широких экранах переопределено выше */
+            gap: 10px;
+            max-width: 85%;
         }
 
         .msg-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             object-fit: cover;
-            background: var(--accent-color);
+            background: linear-gradient(145deg, #2b6eb0, #1a4a7a);
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -298,7 +369,8 @@
             color: white;
             font-weight: bold;
             font-size: 16px;
-            border: 2px solid var(--accent-light);
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 2px 8px var(--accent-blue);
         }
 
         .msg-avatar svg {
@@ -313,30 +385,40 @@
         }
 
         .msg-item {
-            padding: 8px 12px;
-            border-radius: 12px;
+            padding: 10px 16px;
+            border-radius: 20px;
             word-wrap: break-word;
-            background: var(--other-message-bg);
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            background: var(--other-message-glass);
+            border-bottom-left-radius: 6px;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
             cursor: pointer;
-            transition: filter 0.1s;
+            transition: 0.15s;
         }
         .msg-item:hover {
-            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(43, 110, 176, 0.5);
+            border-color: rgba(255,255,255,0.3);
         }
 
+        .my-message {
+            align-self: flex-end;
+        }
         .my-message .msg-item {
-            background: var(--my-message-bg);
-            border-bottom-right-radius: 4px;
-            border-bottom-left-radius: 12px;
+            background: var(--my-message-glass);
+            border-bottom-right-radius: 6px;
+            border-bottom-left-radius: 20px;
+            border-color: rgba(255,255,255,0.3);
         }
 
         .msg-author {
             font-size: 13px;
-            font-weight: bold;
-            color: var(--accent-light);
-            margin-bottom: 4px;
+            font-weight: 600;
+            color: var(--accent-light-blue);
+            margin-bottom: 5px;
+            letter-spacing: 0.2px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .file-message {
@@ -350,88 +432,111 @@
             max-width: 100%;
             max-height: 200px;
             object-fit: contain;
-            background: #000;
-            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
             cursor: pointer;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
 
         .file-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .file-link {
-            background: var(--accent-color);
+            background: var(--accent-blue);
             color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
+            padding: 6px 16px;
+            border-radius: 40px;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            transition: background 0.2s;
+        }
+        .file-link:hover {
+            background: var(--accent-light-blue);
         }
 
         .timestamp {
             font-size: 11px;
-            color: #8696a0;
-            margin-top: 4px;
+            color: var(--text-secondary);
+            margin-top: 6px;
             text-align: right;
+            opacity: 0.8;
         }
 
-        /* Реакции */
         .reactions {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 6px;
+            margin-top: 8px;
         }
         .reaction {
-            background: var(--reaction-bg);
-            border-radius: 20px;
-            padding: 2px 8px;
-            font-size: 13px;
+            background: rgba(0, 30, 60, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 3px 12px;
+            font-size: 14px;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            color: #ddd;
-            border: 1px solid var(--border-color);
+            gap: 5px;
+            color: #e0f0ff;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         .reaction span {
-            font-size: 14px;
+            font-size: 15px;
         }
         .reaction .count {
             font-size: 12px;
-            color: var(--accent-light);
+            color: var(--accent-light-blue);
+            font-weight: bold;
         }
 
-        /* Область ввода – всё в одну строку */
         .input-area {
-            padding: 8px 12px;
-            background: var(--header-bg);
+            padding: 12px 16px;
+            background: var(--header-glass);
+            backdrop-filter: blur(20px);
             display: flex;
-            gap: 8px;
+            gap: 10px;
             align-items: center;
             flex-wrap: nowrap;
             position: relative;
+            border-top: 1px solid var(--glass-border);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
         }
 
         #msgInput {
             margin: 0;
             flex: 1 1 auto;
-            background: var(--input-bg);
-            border: none;
-            padding: 12px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            padding: 12px 20px;
             font-size: 16px;
             color: white;
             border-radius: 40px;
-            height: 48px;
-            min-width: 100px;
+            height: 52px;
+            min-width: 80px;
+            backdrop-filter: blur(10px);
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        #msgInput:focus {
+            border-color: var(--accent-light-blue);
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.3);
+            outline: none;
+        }
+        #msgInput::placeholder {
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
         }
 
         .input-btn {
-            background: transparent;
-            border: none;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
             width: 52px;
             height: 52px;
             border-radius: 50%;
@@ -439,38 +544,41 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color: var(--accent-color);
-            transition: background 0.2s, color 0.2s;
+            color: var(--accent-blue);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
             flex-shrink: 0;
+            backdrop-filter: blur(8px);
         }
 
         .input-btn svg {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             stroke: currentColor;
             stroke-width: 2;
             fill: none;
         }
 
         .input-btn:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--accent-light);
+            background: rgba(255,255,255,0.25);
+            color: var(--accent-light-blue);
+            box-shadow: 0 0 15px var(--accent-blue);
         }
 
         .voice-btn.recording {
-            color: #ff4444;
-            animation: pulse 1s infinite;
+            color: #ff5e5e;
+            animation: pulse 1.2s infinite;
+            border-color: rgba(255,100,100,0.5);
         }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .send-btn {
-            background: var(--accent-color);
-            border: none;
+            background: var(--accent-blue);
+            border: 1px solid rgba(255,255,255,0.3);
             width: 52px;
             height: 52px;
             border-radius: 50%;
@@ -479,8 +587,9 @@
             justify-content: center;
             cursor: pointer;
             color: white;
-            transition: background 0.2s;
+            transition: background 0.2s, box-shadow 0.2s;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(43, 110, 176, 0.4);
         }
 
         .send-btn svg {
@@ -491,56 +600,65 @@
         }
 
         .send-btn:hover {
-            background: var(--accent-light);
+            background: var(--accent-light-blue);
+            box-shadow: 0 6px 18px rgba(74, 158, 255, 0.6);
         }
 
-        /* Панель эмодзи */
         .emoji-panel {
             display: none;
             position: absolute;
-            bottom: 70px;
-            left: 10px;
-            background: var(--emoji-panel-bg);
-            border-radius: 16px;
-            padding: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            bottom: 80px;
+            left: 20px;
+            background: var(--emoji-panel-glass);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 16px;
+            box-shadow: var(--glass-shadow);
             z-index: 30;
-            max-width: 340px;
+            max-width: 360px;
             flex-wrap: wrap;
-            gap: 8px;
-            border: 1px solid var(--border-color);
+            gap: 10px;
+            border: 1px solid var(--glass-border);
         }
 
         .emoji-panel span {
-            font-size: 32px;
+            font-size: 36px;
             cursor: pointer;
-            transition: transform 0.1s;
-            width: 48px;
-            height: 48px;
+            transition: transform 0.15s, filter 0.15s;
+            width: 56px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .emoji-panel span:hover {
-            background: rgba(255,255,255,0.1);
-            transform: scale(1.2);
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.2) rotate(5deg);
+            filter: drop-shadow(0 0 8px var(--accent-blue));
         }
 
         #compressStatus {
             display: none;
-            background: #2b3138;
-            color: #ffaa00;
-            padding: 4px 10px;
-            font-size: 12px;
+            background: rgba(0, 40, 70, 0.8);
+            backdrop-filter: blur(12px);
+            color: #aadcff;
+            padding: 6px 16px;
+            font-size: 13px;
             text-align: center;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         #avatarInput {
             display: none;
         }
     </style>
+
+<!-- html -->
+
 </head>
 <body>
 
@@ -565,6 +683,13 @@
             </div>
         </div>
         <div class="action-buttons">
+            <!-- Кнопка переключения темы (добавлена) -->
+            <button class="icon-btn" onclick="toggleTheme()" title="Сменить тему">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+            </button>
             <button class="icon-btn" onclick="loadMessages()" title="Обновить">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
@@ -673,6 +798,8 @@
     <span onclick="addReactionToSelected('✅')">✅</span>
 </div>
 
+
+<!-- javascript -->
 <script>
     // ================== НАСТРОЙКИ ==================
     var GITHUB_TOKEN = '';   // замените на свой
@@ -685,6 +812,21 @@
     let refreshInterval = null;
     let currentUserAvatar = null;
     let selectedMessageForReaction = null;
+
+    // ================== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (ДОБАВЛЕНО) ==================
+    function toggleTheme() {
+        document.body.classList.toggle('theme-neon');
+        const isNeon = document.body.classList.contains('theme-neon');
+        localStorage.setItem('theme', isNeon ? 'neon' : 'default');
+    }
+
+    // При загрузке применяем сохранённую тему
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'neon') {
+            document.body.classList.add('theme-neon');
+        }
+    })();
 
     // ================== АВАТАРЫ ==================
     document.getElementById('avatarInput').addEventListener('change', async (e) => {
