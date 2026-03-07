@@ -802,10 +802,12 @@
 <!-- javascript -->
 <script>
     // ================== НАСТРОЙКИ ==================
-    var GITHUB_TOKEN = '';   // замените на свой
-    var GIST_ID = '';      // замените на свой
-    const FILE_NAME = 'txt';
+    var GITHUB_TOKEN = '';   // < |ТОЛЬКО     |
+    var GIST_ID = '';        // < |ДЛЯ        |
+    var FILE_NAME = 'txt';   // < |СМАРТФОНОВ |
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 МБ после шифрования
+
+    var set = false;
 
     let currentUser = '';
     let currentSeed = '';
@@ -813,6 +815,43 @@
     let currentUserAvatar = null;
     let selectedMessageForReaction = null;
 
+    function debug(type, a) {
+        if type == "debug" {
+            if a == "1" {
+                console.log(set);
+            } else if a == "2" {
+                console.log(GITHUB_TOKEN);
+            } else if a == "3" {
+                console.log(GIST_ID);
+            } else if a == "4" {
+                console.log(FILE_NAME);
+            } else if a == "a" {
+                console.log(set);
+                console.log(GITHUB_TOKEN);
+                console.log(GIST_ID);
+                console.log(FILE_NAME);
+            } else {
+                console.log("Параметр задан не правильно CODE:211")
+            }
+        } else if type == "set" {
+            if set == false {
+                try{
+                    GITHUB_TOKEN = a[0];
+                    GIST_ID = a[1];
+                    FILE_NAME = a[2];
+                } catch {
+                    console.log("Параметр задан не правильно CODE:221");
+                }
+            } else if set == true {
+                console.log("Сейчас нельзя задавать параметры CODE:222");
+            } else {
+                console.log("Параметр установки задан не правильно CODE:223");
+            }
+        } else {
+            console.log("Тип задан не правильно CODE:101")
+        }
+    }
+    
     // ================== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (ДОБАВЛЕНО) ==================
     function toggleTheme() {
         document.body.classList.toggle('theme-neon');
@@ -1530,3 +1569,4 @@
 </body>
 
 </html>
+
